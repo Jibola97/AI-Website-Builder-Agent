@@ -1,65 +1,127 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import Hero from "./components/Hero";
+import Menu from "./components/Menu";
+import About from "./components/About";
+import Hours from "./components/Hours";
+import Contact from "./components/Contact";
+
+type BusinessData = {
+  businessName: string;
+  tagline: string;
+  theme: { primary: string; background: string; text: string };
+  sections: string[];
+  menu: { name: string; price: string; description: string }[];
+  about: string;
+  hours: { day: string; time: string }[];
+  contact: { phone: string; email: string; address: string };
+};
 
 export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+  const [description, setDescription] = useState("");
+  const [data, setData] = useState<BusinessData | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleGenerate() {
+    setLoading(true);
+    setData(null);
+    const res = await fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ description }),
+    });
+    const result = await res.json();
+    if (result.error) {
+      alert(result.error);
+    } else {
+      setData(result);
+    }
+    setLoading(false);
+  }
+
+  function handleReset() {
+    setData(null);
+    setDescription("");
+  }
+
+  function renderSection(section: string) {
+  if (!data) return null;
+  switch (section) {
+    case "menu":
+      return <Menu key="menu" items={data.menu} theme={data.theme} />;
+    case "about":
+      return <About key="about" text={data.about} theme={data.theme} />;
+    case "hours":
+      return <Hours key="hours" hours={data.hours} theme={data.theme} />;
+    case "contact":
+      return (
+        <Contact
+          key="contact"
+          phone={data.contact.phone}
+          email={data.contact.email}
+          address={data.contact.address}
+          theme={data.theme}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      );
+    default:
+      return null;
+  }
+}
+
+  // LOADING STATE
+  if (loading) {
+    return (
+      <main className="min-h-screen flex flex-col items-center justify-center gap-4">
+        <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
+        <p className="text-zinc-600 text-lg">Generating your website…</p>
       </main>
-    </div>
+    );
+  }
+
+  // RESULT STATE — form hidden, generated site shown with a reset button
+  if (data) {
+    return (
+      <main>
+        <div className="fixed top-4 right-4 z-50">
+          <button
+            onClick={handleReset}
+            className="px-4 py-2 bg-zinc-900 text-white rounded-full text-sm font-medium hover:bg-zinc-700 transition"
+          >
+            ← Start over
+          </button>
+        </div>
+        <Hero businessName={data.businessName} tagline={data.tagline} theme={data.theme}/>
+        {data.sections.map((section) => renderSection(section))}
+      </main>
+    );
+  }
+
+  // INPUT STATE — the default form
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center">
+      <div className="max-w-xl w-full px-6">
+        <h1 className="text-3xl font-bold mb-2 text-center">
+          AI Website Builder
+        </h1>
+        <p className="text-zinc-500 text-center mb-8">
+          Describe your business and we&apos;ll build your site.
+        </p>
+        <textarea
+          className="w-full border border-zinc-300 rounded-lg p-3 mb-4"
+          rows={3}
+          placeholder="e.g. A cosy hair salon in Manchester specialising in colour and cuts"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <button
+          onClick={handleGenerate}
+          disabled={!description.trim()}
+          className="w-full px-6 py-3 bg-amber-500 text-white rounded-full font-medium hover:bg-amber-600 transition disabled:opacity-50"
+        >
+          Generate Website
+        </button>
+      </div>
+    </main>
   );
 }
