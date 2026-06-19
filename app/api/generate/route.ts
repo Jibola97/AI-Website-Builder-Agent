@@ -6,16 +6,38 @@ const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+async function fetchImage(query: string, fallbackQuery?: string): Promise<string | undefined> {
+  const search = async (q: string) => {
+    try {
+      const res = await fetch(
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
+          q
+        )}&per_page=1&orientation=squarish`,
+        { headers: { Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}` } }
+      );
+      const data = await res.json();
+      return data.results?.[0]?.urls?.regular;
+    } catch {
+      return undefined;
+    }
+  };
+
+  return (await search(query)) ?? (fallbackQuery ? await search(fallbackQuery) : undefined);
+}
+
 // The exact shape we require back. If the AI's output doesn't match, it fails validation.
 const BusinessSchema = z.object({
   businessName: z.string(),
   tagline: z.string(),
+  imageTheme: z.string(),
   theme: z.object({
     primary: z.string(),
     background: z.string(),
     text: z.string(),
   }),
-  sections: z.array(z.enum(["menu", "about", "hours", "contact"])),
+  sections: z.array(
+    z.enum(["menu", "about", "hours", "contact", "gallery", "testimonials"])
+  ),
   menu: z.array(
     z.object({
       name: z.string(),
@@ -35,6 +57,18 @@ const BusinessSchema = z.object({
     email: z.string(),
     address: z.string(),
   }),
+  gallery: z.array(
+    z.object({
+      caption: z.string(),
+      image: z.string().optional(),
+    })
+  ),
+  testimonials: z.array(
+    z.object({
+      quote: z.string(),
+      author: z.string(),
+    })
+  ),
 });
 
 function buildPrompt(description: string) {
@@ -42,16 +76,19 @@ function buildPrompt(description: string) {
 {
   "businessName": string,
   "tagline": string,
+  "imageTheme": string,  // a short generic phrase describing this business's visual style for stock photos, e.g. "fine dining restaurant", "luxury hotel lobby", "modern barbershop"
   "theme": { "primary": string, "background": string, "text": string },  // hex colours suited to this industry. primary = accent (buttons, prices), background = soft hero tint, text = dark readable colour for headings
   "sections": string[],  // ordering of sections, chosen from: "menu", "about", "hours", "contact". Order them in the way that best suits this type of business.
   "menu": [ { "name": string, "price": string, "description": string } ],
   "about": string,  // 2-3 sentence paragraph about the business
   "hours": [ { "day": string, "time": string } ],  // 7 entries, Monday to Sunday
   "contact": { "phone": string, "email": string, "address": string }
+  "gallery": [ { "caption": string } ],  // 3-6 short captions describing photos this business would show (e.g. "Freshly cut fade", "Our cosy interior")
+  "testimonials": [ { "quote": string, "author": string } ],  // 2-3 realistic but fictional customer reviews
 }
 Generate 4-6 menu items appropriate to the business. Prices in GBP. Make contact details realistic but fictional. Choose the section order that makes most sense for this industry.
 Choose theme colours that suit the industry's mood (e.g. warm and appetising for food, calm and elegant for beauty, bold and professional for trades). Use valid 6-digit hex codes like "#e11d48".
-
+Always include all of these in the sections array: "menu", "about", "hours", "contact", "gallery", "testimonials". Order them to best suit the industry.
 Business description: ${description}`;
 }
 
@@ -76,7 +113,15 @@ export async function POST(request: Request) {
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       const data = await generateOnce(description);
-      return NextResponse.json(data);
+
+// Enrich each gallery item with a real Unsplash photo based on its caption
+if (data.gallery && data.gallery.length > 0) {
+    for (const item of data.gallery) {
+      item.image = await fetchImage(item.caption, data.imageTheme);
+    }
+  }
+
+return NextResponse.json(data);
     } catch (err) {
       console.log(`Attempt ${attempt} failed:`, err);
       if (attempt === 2) {

@@ -1,5 +1,7 @@
 "use client";
 
+import Gallery from "./components/Gallery";
+import Testimonials from "./components/Testimonials";
 import { useState } from "react";
 import Hero from "./components/Hero";
 import Menu from "./components/Menu";
@@ -16,6 +18,8 @@ type BusinessData = {
   about: string;
   hours: { day: string; time: string }[];
   contact: { phone: string; email: string; address: string };
+  gallery: { caption: string; image?: string }[];
+  testimonials: { quote: string; author: string }[];
 };
 
 export default function Home() {
@@ -63,6 +67,12 @@ export default function Home() {
           address={data.contact.address}
           theme={data.theme}
         />
+      );
+    case "gallery":
+      return <Gallery key="gallery" items={data.gallery} theme={data.theme} />;
+    case "testimonials":
+      return (
+        <Testimonials key="testimonials" items={data.testimonials} theme={data.theme} />
       );
     default:
       return null;
