@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 type BusinessData = {
   businessName: string;
   tagline: string;
+  heroImage?: string;
   theme: { primary: string; background: string; text: string };
   sections: string[];
   menu: { name: string; price: string; description: string }[];
@@ -101,7 +102,7 @@ export default function Home() {
             ← Start over
           </button>
         </div>
-        <Hero businessName={data.businessName} tagline={data.tagline} theme={data.theme}/>
+        <Hero businessName={data.businessName} tagline={data.tagline} theme={data.theme} heroImage={data.heroImage}/>
         {data.sections.map((section) => renderSection(section))}
       </main>
     );

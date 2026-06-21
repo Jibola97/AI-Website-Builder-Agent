@@ -6,13 +6,17 @@ const client = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
-async function fetchImage(query: string, fallbackQuery?: string): Promise<string | undefined> {
+async function fetchImage(
+  query: string,
+  fallbackQuery?: string,
+  orientation: string = "squarish"
+): Promise<string | undefined> {
   const search = async (q: string) => {
     try {
       const res = await fetch(
         `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
           q
-        )}&per_page=1&orientation=squarish`,
+        )}&per_page=1&orientation=${orientation}`,
         { headers: { Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}` } }
       );
       const data = await res.json();
@@ -114,14 +118,17 @@ export async function POST(request: Request) {
     try {
       const data = await generateOnce(description);
 
-// Enrich each gallery item with a real Unsplash photo based on its caption
-if (data.gallery && data.gallery.length > 0) {
-    for (const item of data.gallery) {
-      item.image = await fetchImage(item.caption, data.imageTheme);
-    }
-  }
+      // Enrich each gallery item with a real Unsplash photo based on its caption
+      if (data.gallery && data.gallery.length > 0) {
+        for (const item of data.gallery) {
+          item.image = await fetchImage(item.caption, data.imageTheme);
+        }
+      }
 
-return NextResponse.json(data);
+      // Fetch a wide hero background image based on the business's visual theme
+      const heroImage = await fetchImage(data.imageTheme, "business storefront", "landscape");
+
+      return NextResponse.json({ ...data, heroImage });
     } catch (err) {
       console.log(`Attempt ${attempt} failed:`, err);
       if (attempt === 2) {
