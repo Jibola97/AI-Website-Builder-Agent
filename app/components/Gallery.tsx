@@ -1,3 +1,4 @@
+import SectionHeader from "./SectionHeader";
 type Theme = { primary: string; background: string; text: string };
 
 type GalleryProps = {
@@ -9,19 +10,7 @@ export default function Gallery({ items, theme }: GalleryProps) {
   return (
     <section className="py-24 px-6 md:px-16 bg-white">
       <div className="max-w-6xl mx-auto">
-        {/* Eyebrow + heading, matching the Menu treatment */}
-        <p
-          className="text-sm font-semibold tracking-widest uppercase mb-3"
-          style={{ color: theme.primary }}
-        >
-          Gallery
-        </p>
-        <h2
-          className="text-4xl md:text-5xl font-extrabold tracking-tight mb-14"
-          style={{ color: theme.text }}
-        >
-          A closer look
-        </h2>
+        <SectionHeader eyebrow="Gallery" heading="A closer look" theme={theme} />
 
         {/* Image grid with hover-reveal captions */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-5">

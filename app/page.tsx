@@ -1,4 +1,5 @@
 "use client";
+import VisitUs from "./components/VisitUs";
 
 import Gallery from "./components/Gallery";
 import Testimonials from "./components/Testimonials";
@@ -58,11 +59,12 @@ export default function Home() {
     case "about":
       return <About key="about" text={data.about} theme={data.theme} />;
     case "hours":
-      return <Hours key="hours" hours={data.hours} theme={data.theme} />;
+      return null; // handled by the combined VisitUs section (rendered on "contact")
     case "contact":
       return (
-        <Contact
-          key="contact"
+        <VisitUs
+          key="visitus"
+          hours={data.hours}
           phone={data.contact.phone}
           email={data.contact.email}
           address={data.contact.address}

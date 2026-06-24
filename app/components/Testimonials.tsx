@@ -1,3 +1,5 @@
+import SectionHeader from "./SectionHeader";
+
 type Theme = { primary: string; background: string; text: string };
 
 type TestimonialsProps = {
@@ -7,23 +9,32 @@ type TestimonialsProps = {
 
 export default function Testimonials({ items, theme }: TestimonialsProps) {
   return (
-    <section className="py-20 px-6 max-w-3xl mx-auto">
-      <h2 className="text-3xl font-bold mb-10 text-center" style={{ color: theme.text }}>
-        What Our Customers Say
-      </h2>
-      <div className="flex flex-col gap-6">
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className="p-6 rounded-lg"
-            style={{ backgroundColor: theme.background }}
-          >
-            <p className="text-lg text-zinc-700 italic mb-3">“{item.quote}”</p>
-            <p className="font-medium" style={{ color: theme.primary }}>
-              — {item.author}
-            </p>
-          </div>
-        ))}
+    <section className="py-24 px-6 md:px-16 bg-white">
+      <div className="max-w-6xl mx-auto">
+        <SectionHeader eyebrow="Testimonials" heading="What people say" theme={theme} />
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {items.map((item, index) => (
+            <div
+              key={index}
+              className="bg-zinc-50 rounded-2xl p-8 flex flex-col"
+            >
+              {/* Big decorative quote mark in the theme accent */}
+              <span
+                className="text-5xl leading-none font-serif mb-4"
+                style={{ color: theme.primary }}
+              >
+                &ldquo;
+              </span>
+              <p className="text-zinc-700 leading-relaxed mb-6 flex-grow">
+                {item.quote}
+              </p>
+              <p className="font-semibold" style={{ color: theme.text }}>
+                {item.author}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
