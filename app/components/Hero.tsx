@@ -7,12 +7,12 @@ type Theme = {
 type HeroProps = {
   businessName: string;
   tagline: string;
+  heroCta: string;
   theme: Theme;
   heroImage?: string;
 };
 
-export default function Hero({ businessName, tagline, theme, heroImage }: HeroProps) {
-  return (
+export default function Hero({ businessName, tagline, heroCta, theme, heroImage }: HeroProps) {  return (
     <section
       className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 overflow-hidden"
       style={
@@ -57,7 +57,7 @@ export default function Hero({ businessName, tagline, theme, heroImage }: HeroPr
           className="px-8 py-4 text-white rounded-full font-semibold text-lg transition hover:opacity-90 hover:scale-105"
           style={{ backgroundColor: theme.primary }}
         >
-          Order Now
+          {heroCta}
         </button>
       </div>
     </section>

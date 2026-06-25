@@ -7,12 +7,13 @@ import { useState } from "react";
 import Hero from "./components/Hero";
 import Menu from "./components/Menu";
 import About from "./components/About";
-import Hours from "./components/Hours";
-import Contact from "./components/Contact";
 
 type BusinessData = {
   businessName: string;
   tagline: string;
+  heroCta: string;
+  menuEyebrow: string;
+  menuHeading: string;
   heroImage?: string;
   theme: { primary: string; background: string; text: string };
   sections: string[];
@@ -51,13 +52,14 @@ export default function Home() {
     setDescription("");
   }
 
-  function renderSection(section: string) {
+  function renderSection(section: string, index: number) {
   if (!data) return null;
+  const bg = index % 2 === 0 ? "bg-white" : "bg-zinc-50";
   switch (section) {
     case "menu":
-      return <Menu key="menu" items={data.menu} theme={data.theme} />;
+      return <Menu key="menu" items={data.menu} eyebrow={data.menuEyebrow} heading={data.menuHeading} theme={data.theme} background={bg} />;
     case "about":
-      return <About key="about" text={data.about} theme={data.theme} />;
+      return <About key="about" text={data.about} theme={data.theme} background={bg} />;
     case "hours":
       return null; // handled by the combined VisitUs section (rendered on "contact")
     case "contact":
@@ -69,13 +71,14 @@ export default function Home() {
           email={data.contact.email}
           address={data.contact.address}
           theme={data.theme}
+          background={bg}
         />
       );
     case "gallery":
-      return <Gallery key="gallery" items={data.gallery} theme={data.theme} />;
+      return <Gallery key="gallery" items={data.gallery} theme={data.theme} background={bg} />;
     case "testimonials":
       return (
-        <Testimonials key="testimonials" items={data.testimonials} theme={data.theme} />
+        <Testimonials key="testimonials" items={data.testimonials} theme={data.theme} background={bg} />
       );
     default:
       return null;
@@ -104,8 +107,8 @@ export default function Home() {
             ← Start over
           </button>
         </div>
-        <Hero businessName={data.businessName} tagline={data.tagline} theme={data.theme} heroImage={data.heroImage}/>
-        {data.sections.map((section) => renderSection(section))}
+        <Hero businessName={data.businessName} tagline={data.tagline} heroCta={data.heroCta} theme={data.theme} heroImage={data.heroImage}/>
+        {data.sections.map((section, index) => renderSection(section, index))}
       </main>
     );
   }

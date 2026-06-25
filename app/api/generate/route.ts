@@ -33,6 +33,9 @@ async function fetchImage(
 const BusinessSchema = z.object({
   businessName: z.string(),
   tagline: z.string(),
+  heroCta: z.string(),
+  menuEyebrow: z.string(),
+  menuHeading: z.string(),
   imageTheme: z.string(),
   theme: z.object({
     primary: z.string(),
@@ -80,9 +83,12 @@ function buildPrompt(description: string) {
 {
   "businessName": string,
   "tagline": string,
+  "heroCta": string,  // the hero button label, industry-appropriate. e.g. restaurant "Order Now", hotel "Book a Room", gym "Shop Now", salon "Book Appointment"
+  "menuEyebrow": string,  // small label above the main offerings heading. e.g. restaurant "Menu", hotel "Rooms", gym "Products", salon "Services"
+  "menuHeading": string,  // the main offerings heading. e.g. restaurant "What we serve", hotel "Our Rooms", gym "Shop the range", salon "Our Services"
   "imageTheme": string,  // a short generic phrase describing this business's visual style for stock photos, e.g. "fine dining restaurant", "luxury hotel lobby", "modern barbershop"
   "theme": { "primary": string, "background": string, "text": string },  // hex colours suited to this industry. primary = accent (buttons, prices), background = soft hero tint, text = dark readable colour for headings
-  "sections": string[],  // ordering of sections, chosen from: "menu", "about", "hours", "contact". Order them in the way that best suits this type of business.
+  "sections": string[],  // ordering of sections, chosen from: "menu", "about", "hours", "contact", "gallery", "testimonials". Order them in the way that best suits this type of business.
   "menu": [ { "name": string, "price": string, "description": string } ],
   "about": string,  // 2-3 sentence paragraph about the business
   "hours": [ { "day": string, "time": string } ],  // 7 entries, Monday to Sunday
@@ -121,8 +127,8 @@ export async function POST(request: Request) {
       // Enrich each gallery item with a real Unsplash photo based on its caption
       if (data.gallery && data.gallery.length > 0) {
         for (const item of data.gallery) {
-          item.image = await fetchImage(item.caption, data.imageTheme);
-        }
+  item.image = await fetchImage(`${data.imageTheme} ${item.caption}`, data.imageTheme);
+}
       }
 
       // Fetch a wide hero background image based on the business's visual theme

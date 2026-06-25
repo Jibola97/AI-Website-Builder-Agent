@@ -2,11 +2,11 @@ import SectionHeader from "./SectionHeader";
 
 type Theme = { primary: string; background: string; text: string };
 
-type AboutProps = { text: string; theme: Theme };
+type AboutProps = { text: string; theme: Theme; background: string };
 
-export default function About({ text, theme }: AboutProps) {
+export default function About({ text, theme, background }: AboutProps) {
   return (
-    <section className="py-24 px-6 md:px-16 bg-zinc-50">
+    <section className={`py-24 px-6 md:px-16 ${background}`}>
       <div className="max-w-5xl mx-auto grid md:grid-cols-[1fr_1.5fr] gap-10 md:gap-16 items-start">
         {/* Left column: the section header */}
         <div>

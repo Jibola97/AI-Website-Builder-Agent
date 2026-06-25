@@ -5,11 +5,12 @@ type Theme = { primary: string; background: string; text: string };
 type TestimonialsProps = {
   items: { quote: string; author: string }[];
   theme: Theme;
+  background: string;
 };
 
-export default function Testimonials({ items, theme }: TestimonialsProps) {
+export default function Testimonials({ items, theme, background }: TestimonialsProps) {
   return (
-    <section className="py-24 px-6 md:px-16 bg-white">
+    <section className={`py-24 px-6 md:px-16 ${background}`}>
       <div className="max-w-6xl mx-auto">
         <SectionHeader eyebrow="Testimonials" heading="What people say" theme={theme} />
 

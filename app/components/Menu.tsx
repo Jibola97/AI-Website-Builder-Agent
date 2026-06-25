@@ -3,13 +3,13 @@ type Theme = { primary: string; background: string; text: string };
 
 type MenuItem = { name: string; price: string; description: string };
 
-type MenuProps = { items: MenuItem[]; theme: Theme };
+type MenuProps = { items: MenuItem[]; eyebrow: string; heading: string; theme: Theme; background: string };
 
-export default function Menu({ items, theme }: MenuProps) {
+export default function Menu({ items, eyebrow, heading, theme, background }: MenuProps) {
   return (
-    <section className="py-24 px-6 md:px-16 bg-zinc-50">
+    <section className={`py-24 px-6 md:px-16 ${background}`}>
       <div className="max-w-5xl mx-auto">
-        <SectionHeader eyebrow="Menu" heading="What we serve" theme={theme} />
+        <SectionHeader eyebrow={eyebrow} heading={heading} theme={theme} />
 
         {/* Two-column grid of items */}
         <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
