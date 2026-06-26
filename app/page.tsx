@@ -1,4 +1,5 @@
 "use client";
+import { STYLES, StyleName } from "./components/styles";
 import VisitUs from "./components/VisitUs";
 
 import Gallery from "./components/Gallery";
@@ -11,6 +12,7 @@ import About from "./components/About";
 type BusinessData = {
   businessName: string;
   tagline: string;
+  styleName: StyleName;
   heroCta: string;
   menuEyebrow: string;
   menuHeading: string;
@@ -97,6 +99,7 @@ export default function Home() {
 
   // RESULT STATE — form hidden, generated site shown with a reset button
   if (data) {
+    const style = STYLES[data.styleName];
     return (
       <main>
         <div className="fixed top-4 right-4 z-50">
@@ -107,7 +110,7 @@ export default function Home() {
             ← Start over
           </button>
         </div>
-        <Hero businessName={data.businessName} tagline={data.tagline} heroCta={data.heroCta} theme={data.theme} heroImage={data.heroImage}/>
+        <Hero businessName={data.businessName} tagline={data.tagline} heroCta={data.heroCta} theme={data.theme} heroImage={data.heroImage} style={style}/>
         {data.sections.map((section, index) => renderSection(section, index))}
       </main>
     );

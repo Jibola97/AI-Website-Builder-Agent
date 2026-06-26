@@ -1,3 +1,5 @@
+import { SiteStyle } from "./styles";
+
 type Theme = {
   primary: string;
   background: string;
@@ -10,9 +12,10 @@ type HeroProps = {
   heroCta: string;
   theme: Theme;
   heroImage?: string;
+  style: SiteStyle;
 };
 
-export default function Hero({ businessName, tagline, heroCta, theme, heroImage }: HeroProps) {  return (
+export default function Hero({ businessName, tagline, heroCta, theme, heroImage, style }: HeroProps) {  return (
     <section
       className="relative min-h-screen flex flex-col justify-center px-8 md:px-16 overflow-hidden"
       style={
@@ -41,7 +44,7 @@ export default function Hero({ businessName, tagline, heroCta, theme, heroImage 
       {/* Content sits above the overlays */}
       <div className="relative z-10 max-w-4xl">
         <h1
-          className="text-6xl md:text-8xl font-extrabold leading-[0.95] tracking-tight mb-6"
+          className={`text-6xl md:text-8xl leading-[0.95] mb-6 ${style.headingFont} ${style.headingWeight}`}
           style={{ color: heroImage ? "#ffffff" : theme.text }}
         >
           {businessName}
@@ -54,7 +57,7 @@ export default function Hero({ businessName, tagline, heroCta, theme, heroImage 
           {tagline}
         </p>
         <button
-          className="px-8 py-4 text-white rounded-full font-semibold text-lg transition hover:opacity-90 hover:scale-105"
+          className={`px-8 py-4 text-white ${style.buttonRadius} font-semibold text-lg transition hover:opacity-90 hover:scale-105`}
           style={{ backgroundColor: theme.primary }}
         >
           {heroCta}
