@@ -1,15 +1,18 @@
 import SectionHeader from "./SectionHeader";
+
+import { SiteStyle } from "./styles";
+
 type Theme = { primary: string; background: string; text: string };
 
 type MenuItem = { name: string; price: string; description: string };
 
-type MenuProps = { items: MenuItem[]; eyebrow: string; heading: string; theme: Theme; background: string };
+type MenuProps = { items: MenuItem[]; eyebrow: string; heading: string; theme: Theme; background: string; style: SiteStyle };
 
-export default function Menu({ items, eyebrow, heading, theme, background }: MenuProps) {
+export default function Menu({ items, eyebrow, heading, theme, background, style }: MenuProps) {
   return (
-    <section className={`py-24 px-6 md:px-16 ${background}`}>
+    <section className={`${style.sectionSpacing} px-6 md:px-16 ${background}`}>
       <div className="max-w-5xl mx-auto">
-        <SectionHeader eyebrow={eyebrow} heading={heading} theme={theme} />
+        <SectionHeader eyebrow={eyebrow} heading={heading} theme={theme} style={style} />
 
         {/* Two-column grid of items */}
         <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">

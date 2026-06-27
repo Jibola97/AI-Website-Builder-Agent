@@ -56,14 +56,13 @@ export default function Home() {
 
   function renderSection(section: string, index: number) {
   if (!data) return null;
+  const style = STYLES[data.styleName];
   const bg = index % 2 === 0 ? "bg-white" : "bg-zinc-50";
   switch (section) {
     case "menu":
-      return <Menu key="menu" items={data.menu} eyebrow={data.menuEyebrow} heading={data.menuHeading} theme={data.theme} background={bg} />;
+      return <Menu key="menu" items={data.menu} eyebrow={data.menuEyebrow} heading={data.menuHeading} theme={data.theme} background={bg} style={style} />;
     case "about":
-      return <About key="about" text={data.about} theme={data.theme} background={bg} />;
-    case "hours":
-      return null; // handled by the combined VisitUs section (rendered on "contact")
+      return <About key="about" text={data.about} theme={data.theme} background={bg} style={style} />;
     case "contact":
       return (
         <VisitUs
@@ -74,13 +73,14 @@ export default function Home() {
           address={data.contact.address}
           theme={data.theme}
           background={bg}
+          style={style}
         />
       );
     case "gallery":
-      return <Gallery key="gallery" items={data.gallery} theme={data.theme} background={bg} />;
+      return <Gallery key="gallery" items={data.gallery} theme={data.theme} background={bg} style={style} />;
     case "testimonials":
       return (
-        <Testimonials key="testimonials" items={data.testimonials} theme={data.theme} background={bg} />
+        <Testimonials key="testimonials" items={data.testimonials} theme={data.theme} background={bg} style={style} />
       );
     default:
       return null;

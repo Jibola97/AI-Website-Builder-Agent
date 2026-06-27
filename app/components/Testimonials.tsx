@@ -1,4 +1,6 @@
 import SectionHeader from "./SectionHeader";
+import { SiteStyle } from "./styles";
+
 
 type Theme = { primary: string; background: string; text: string };
 
@@ -6,19 +8,20 @@ type TestimonialsProps = {
   items: { quote: string; author: string }[];
   theme: Theme;
   background: string;
+  style: SiteStyle;
 };
 
-export default function Testimonials({ items, theme, background }: TestimonialsProps) {
+export default function Testimonials({ items, theme, background, style }: TestimonialsProps) {
   return (
-    <section className={`py-24 px-6 md:px-16 ${background}`}>
+    <section className={`${style.sectionSpacing} px-6 md:px-16 ${background}`}>
       <div className="max-w-6xl mx-auto">
-        <SectionHeader eyebrow="Testimonials" heading="What people say" theme={theme} />
+        <SectionHeader eyebrow="Testimonials" heading="What people say" theme={theme} style={style} />
 
         <div className="grid md:grid-cols-3 gap-6">
           {items.map((item, index) => (
             <div
               key={index}
-              className="bg-zinc-50 rounded-2xl p-8 flex flex-col"
+              className={`${style.cardFill} ${style.cardRadius} p-8 flex flex-col`}
             >
               {/* Big decorative quote mark in the theme accent */}
               <span

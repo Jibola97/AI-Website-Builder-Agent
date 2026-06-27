@@ -1,24 +1,29 @@
 import SectionHeader from "./SectionHeader";
+import { SiteStyle } from "./styles";
+
+
+
 type Theme = { primary: string; background: string; text: string };
 
 type GalleryProps = {
   items: { caption: string; image?: string }[];
   theme: Theme;
   background: string;
+  style: SiteStyle;
 };
 
-export default function Gallery({ items, theme, background }: GalleryProps) {
+export default function Gallery({ items, theme, background, style }: GalleryProps) {
   return (
-    <section className={`py-24 px-6 md:px-16 ${background}`}>
+    <section className={`${style.sectionSpacing} px-6 md:px-16 ${background}`}>
       <div className="max-w-6xl mx-auto">
-        <SectionHeader eyebrow="Gallery" heading="A closer look" theme={theme} />
+        <SectionHeader eyebrow="Gallery" heading="A closer look" theme={theme} style={style} />
 
         {/* Image grid with hover-reveal captions */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
           {items.map((item, index) => (
             <div
               key={index}
-              className="group relative aspect-square overflow-hidden rounded-xl"
+              className={`group relative aspect-square overflow-hidden ${style.cardRadius}`}
             >
               {item.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
