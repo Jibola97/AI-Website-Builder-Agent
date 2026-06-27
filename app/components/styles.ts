@@ -37,10 +37,11 @@ export const STYLES: Record<StyleName, SiteStyle> = {
     cardFill: "bg-white border border-zinc-200",
   },
 
-  // PLAYFUL — friendly, soft, approachable. Heavy sans like bold, but
-  // big rounding everywhere and tighter vertical rhythm for energy.
+  // PLAYFUL — friendly, warm, casual (cafés, ice cream, juice bars).
+  // Rounded Poppins headings set it apart from bold's geometric sans;
+  // big corner rounding and tighter vertical rhythm add energy.
   playful: {
-    headingFont: "font-sans",
+    headingFont: "font-playful",
     headingWeight: "font-extrabold tracking-tight",
     cardRadius: "rounded-3xl",
     buttonRadius: "rounded-full",

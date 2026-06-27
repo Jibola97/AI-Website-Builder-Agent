@@ -84,7 +84,7 @@ function buildPrompt(description: string) {
 {
   "businessName": string,
   "tagline": string,
-  "styleName": string,  // pick ONE visual style that best fits this industry: "bold" (heavy, modern, high-energy — food, fitness, trades), "elegant" (refined, serif, minimal — hotels, salons, fine dining, luxury), or "playful" (friendly, rounded, approachable — kids, cafés, casual brands). Return exactly one of these three lowercase words.
+  "styleName": string,  // pick ONE visual style that best fits this industry: "bold" (heavy, modern, high-energy — food, fitness, trades), "elegant" (refined, serif, minimal — hotels, salons, fine dining, luxury), or "playful" (friendly, warm, casual — cafés, ice cream parlours, juice bars, casual eateries, relaxed brands). Return exactly one of these three lowercase words.
   "heroCta": string,  // the hero button label, industry-appropriate. e.g. restaurant "Order Now", hotel "Book a Room", gym "Shop Now", salon "Book Appointment"
   "menuEyebrow": string,  // small label above the main offerings heading. e.g. restaurant "Menu", hotel "Rooms", gym "Products", salon "Services"
   "menuHeading": string,  // the main offerings heading. e.g. restaurant "What we serve", hotel "Our Rooms", gym "Shop the range", salon "Our Services"
