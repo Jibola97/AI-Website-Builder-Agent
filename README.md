@@ -1,4 +1,4 @@
-# My-website-builder
+# My-Website-Builder
 
 An AI-powered website generator. Describe a business in plain English — *"a cosy hair salon in Manchester"* — and it generates a complete, styled, industry-tailored website: choosing a visual style and colour theme, selecting and ordering sections, writing the content, and pulling in real photography.
 
